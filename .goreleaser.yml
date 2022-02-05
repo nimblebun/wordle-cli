@@ -1,9 +1,9 @@
 env:
   - GO111MODULE=on
-  - CGO_ENABLED=0
+  - CGO_ENABLED=1
 
 builds:
-  - mod_timestamp: '{{ .CommitTimestamp }}'
+  - mod_timestamp: "{{ .CommitTimestamp }}"
     flags:
       - -trimpath
     ldflags:
@@ -23,14 +23,22 @@ builds:
 
 archives:
   - format: binary
-    name_template: 'wordle_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    name_template: "wordle_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 checksum:
-  name_template: 'wordle_{{ .Version }}_SHA256SUM'
+  name_template: "wordle_{{ .Version }}_SHA256SUM"
   algorithm: sha256
 
 signs:
-  - args: [ '-u', '{{ .Env.PGP_USER_ID }}', '--output', '${signature}', '--detach-sign', '${artifact}' ]
+  - args:
+      [
+        "-u",
+        "{{ .Env.PGP_USER_ID }}",
+        "--output",
+        "${signature}",
+        "--detach-sign",
+        "${artifact}",
+      ]
     artifacts: checksum
 
 changelog:
