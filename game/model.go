@@ -11,7 +11,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"golang.design/x/clipboard"
+	"pkg.nimblebun.works/clipboard"
 	"pkg.nimblebun.works/wordle-cli/common"
 	"pkg.nimblebun.works/wordle-cli/common/save"
 )
@@ -86,10 +86,7 @@ func (m *AppModel) View() string {
 	grid := m.renderGrid()
 
 	if m.GameState != common.GameStateRunning {
-		err := clipboard.Init()
-		if err != nil {
-			clipboard.Write(clipboard.FmtText, []byte(m.getShareString()))
-		}
+		_ = clipboard.WriteAll(m.getShareString())
 
 		if m.NewGame && m.GameType != common.GameTypeRandom {
 			m.save()

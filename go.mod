@@ -7,5 +7,5 @@ require (
 	github.com/charmbracelet/bubbletea v0.19.3
 	github.com/charmbracelet/lipgloss v0.4.0
 	github.com/urfave/cli/v2 v2.3.0
-	golang.design/x/clipboard v0.6.0
+	pkg.nimblebun.works/clipboard v0.1.5
 )
