@@ -34,7 +34,7 @@ func loadSave(savepath string) (*SaveFile, error) {
 		return nil, err
 	}
 
-	save := &SaveFile{}
+	save := New()
 	err = json.Unmarshal(data, save)
 
 	if err != nil {

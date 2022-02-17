@@ -59,7 +59,7 @@ func NewGame(word string, gameType common.GameType, id int) *AppModel {
 
 	if gameType != common.GameTypeRandom && model.SaveData.LastGameID == model.ID {
 		model.GameState = model.SaveData.LastGameStatus
-		model.NewGame = false
+		model.NewGame = model.SaveData.LastGameStatus == common.GameStateRunning
 
 		for i := range model.SaveData.LastGameGrid {
 			for j := range model.SaveData.LastGameGrid[i] {
@@ -67,8 +67,6 @@ func NewGame(word string, gameType common.GameType, id int) *AppModel {
 
 				if item != nil {
 					model.setGridItem(i, j, item.Letter, item.State)
-
-					model.CurrentColumn = j + 1
 					model.CurrentRow = i + 1
 				}
 			}
@@ -86,11 +84,8 @@ func (m *AppModel) View() string {
 	grid := m.renderGrid()
 
 	if m.GameState != common.GameStateRunning {
-		_ = clipboard.WriteAll(m.getShareString())
-
-		if m.NewGame && m.GameType != common.GameTypeRandom {
-			m.save()
-			m.NewGame = false
+		if m.NewGame {
+			_ = clipboard.WriteAll(m.getShareString())
 		}
 
 		var finalBlock string
