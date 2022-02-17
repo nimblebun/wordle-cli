@@ -12,6 +12,7 @@ import (
 	"unicode"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"pkg.nimblebun.works/clipboard"
 	"pkg.nimblebun.works/wordle-cli/common"
 	"pkg.nimblebun.works/wordle-cli/common/save"
 	"pkg.nimblebun.works/wordle-cli/words"
@@ -96,7 +97,7 @@ func (m *AppModel) enter() tea.Cmd {
 
 	word := wb.String()
 
-	for _, w := range words.WordList {
+	for _, w := range words.ValidWordList {
 		if w == word {
 			ok = true
 			break
@@ -111,22 +112,25 @@ func (m *AppModel) enter() tea.Cmd {
 	targetWord := strings.ToUpper(string(m.Word[:]))
 
 	perfectGuesses := 0
+	matchedIndices := make([]bool, len(targetWord))
 
 	for i := range word {
 		ok = false
 
 		for j := range targetWord {
-			if word[i] == targetWord[j] {
+			if word[i] == targetWord[j] && !matchedIndices[j] {
 				if i == j {
 					m.LetterStates[word[i]] = common.LetterStateExactMatch
 					m.setGridItem(m.CurrentRow, i, word[i], common.LetterStateExactMatch)
 					ok = true
+					matchedIndices[j] = true
 					perfectGuesses++
 					break
 				} else {
 					m.LetterStates[word[i]] = common.LetterStateContainedMatch
 					m.setGridItem(m.CurrentRow, i, word[i], common.LetterStateContainedMatch)
 					ok = true
+					matchedIndices[j] = true
 				}
 			}
 		}
@@ -144,9 +148,11 @@ func (m *AppModel) enter() tea.Cmd {
 		m.GameState = common.GameStateWon
 	}
 
-	if m.CurrentRow == common.WordleMaxGuesses {
+	if m.CurrentRow > common.WordleMaxGuesses {
 		m.GameState = common.GameStateLost
 	}
+
+	m.save()
 
 	return nil
 }
@@ -219,11 +225,29 @@ func (m *AppModel) getShareString() string {
 	return strings.Join(rows, "\n")
 }
 
+func (m *AppModel) copyShareString(automatic bool) tea.Cmd {
+	if m.GameState == common.GameStateRunning {
+		return nil
+	}
+
+	if automatic && !m.NewGame {
+		return nil
+	}
+
+	str := strings.ReplaceAll(m.getShareString(), "🔳", "⬜")
+	_ = clipboard.WriteAll(str)
+
+	return nil
+}
+
 func (m *AppModel) save() {
 	m.SaveData.LastGameID = m.ID
 	m.SaveData.LastGameGrid = m.Grid
 	m.SaveData.LastGameStatus = m.GameState
-	m.SaveData.Statistics.GamesPlayed++
+
+	if m.GameState != common.GameStateRunning {
+		m.SaveData.Statistics.GamesPlayed++
+	}
 
 	if m.GameState == common.GameStateWon {
 		m.SaveData.Statistics.GamesWon++

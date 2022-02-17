@@ -107,7 +107,7 @@ func (m *AppModel) renderStatisticsBlock() string {
 		output = append(output, m.getDistributionProgressBar(maxDistribution, i))
 	}
 
-	output = append(output, "\n\nPress ← to view game summary.\nPress Ctrl+C to exit.")
+	output = append(output, "\n\nPress ← to view game summary.\nPress Ctrl+S to copy the share string.\nPress Ctrl+C to exit.")
 
 	statistics := lipgloss.JoinVertical(lipgloss.Left, output...)
 
@@ -132,7 +132,7 @@ func (m *AppModel) renderFinalMessageBlock() string {
 		message += "Press Ctrl+N to start a new game.\n"
 	}
 
-	message += "Press Ctrl+C to exit."
+	message += "Press Ctrl+S to copy the share string.\nPress Ctrl+C to exit."
 
 	return lipgloss.NewStyle().
 		Padding(1, 2).

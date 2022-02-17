@@ -11,7 +11,6 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"pkg.nimblebun.works/clipboard"
 	"pkg.nimblebun.works/wordle-cli/common"
 	"pkg.nimblebun.works/wordle-cli/common/save"
 )
@@ -59,7 +58,7 @@ func NewGame(word string, gameType common.GameType, id int) *AppModel {
 
 	if gameType != common.GameTypeRandom && model.SaveData.LastGameID == model.ID {
 		model.GameState = model.SaveData.LastGameStatus
-		model.NewGame = false
+		model.NewGame = model.SaveData.LastGameStatus == common.GameStateRunning
 
 		for i := range model.SaveData.LastGameGrid {
 			for j := range model.SaveData.LastGameGrid[i] {
@@ -67,8 +66,6 @@ func NewGame(word string, gameType common.GameType, id int) *AppModel {
 
 				if item != nil {
 					model.setGridItem(i, j, item.Letter, item.State)
-
-					model.CurrentColumn = j + 1
 					model.CurrentRow = i + 1
 				}
 			}
@@ -86,12 +83,7 @@ func (m *AppModel) View() string {
 	grid := m.renderGrid()
 
 	if m.GameState != common.GameStateRunning {
-		_ = clipboard.WriteAll(m.getShareString())
-
-		if m.NewGame && m.GameType != common.GameTypeRandom {
-			m.save()
-			m.NewGame = false
-		}
+		m.copyShareString(true)
 
 		var finalBlock string
 
@@ -126,6 +118,8 @@ func (m *AppModel) handleKeyDown(t tea.KeyType, r []rune) (tea.Model, tea.Cmd) {
 		return m, m.displayGameSummary()
 	case tea.KeyCtrlN:
 		return m, m.new()
+	case tea.KeyCtrlS:
+		return m, m.copyShareString(false)
 	case tea.KeyRunes:
 		if len(r) != 1 {
 			return m, nil
