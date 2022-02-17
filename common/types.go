@@ -43,7 +43,7 @@ func (ls LetterState) String() string {
 	case LetterStateContainedMatch:
 		return "🟨"
 	case LetterStateNoMatch:
-		return "⬜"
+		return "🔳" // fix console display in certain fonts
 	default:
 		return ""
 	}

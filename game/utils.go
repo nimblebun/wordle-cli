@@ -12,6 +12,7 @@ import (
 	"unicode"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"pkg.nimblebun.works/clipboard"
 	"pkg.nimblebun.works/wordle-cli/common"
 	"pkg.nimblebun.works/wordle-cli/common/save"
 	"pkg.nimblebun.works/wordle-cli/words"
@@ -222,6 +223,21 @@ func (m *AppModel) getShareString() string {
 	}
 
 	return strings.Join(rows, "\n")
+}
+
+func (m *AppModel) copyShareString(automatic bool) tea.Cmd {
+	if m.GameState == common.GameStateRunning {
+		return nil
+	}
+
+	if automatic && !m.NewGame {
+		return nil
+	}
+
+	str := strings.ReplaceAll(m.getShareString(), "🔳", "⬜")
+	_ = clipboard.WriteAll(str)
+
+	return nil
 }
 
 func (m *AppModel) save() {
