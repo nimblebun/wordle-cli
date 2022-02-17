@@ -97,7 +97,7 @@ func (m *AppModel) enter() tea.Cmd {
 
 	word := wb.String()
 
-	for _, w := range words.WordList {
+	for _, w := range words.ValidWordList {
 		if w == word {
 			ok = true
 			break
