@@ -161,7 +161,9 @@ func (m *AppModel) enter() tea.Cmd {
 		m.GameState = common.GameStateLost
 	}
 
-	m.save()
+	if m.GameType != common.GameTypeRandom {
+		m.save()
+	}
 
 	return nil
 }
