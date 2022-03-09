@@ -121,25 +121,33 @@ func (m *AppModel) enter() tea.Cmd {
 	targetWord := strings.ToUpper(string(m.Word[:]))
 
 	perfectGuesses := 0
-	matchedIndices := make([]bool, len(targetWord))
+	matchedIndices := make([]int, len(targetWord))
+	for i := 0; i < len(targetWord); i++ {
+		matchedIndices[i] = -1
+	}
 
 	for i := range word {
 		ok = false
 
 		for j := range targetWord {
-			if word[i] == targetWord[j] && !matchedIndices[j] {
+			if word[i] == targetWord[j] {
 				if i == j {
 					m.LetterStates[word[i]] = common.LetterStateExactMatch
 					m.setGridItem(m.CurrentRow, i, word[i], common.LetterStateExactMatch)
 					ok = true
-					matchedIndices[j] = true
+
+					if matchedIndices[j] != -1 {
+						m.setGridItem(m.CurrentRow, matchedIndices[j], word[i], common.LetterStateNoMatch)
+					}
+
+					matchedIndices[j] = i
 					perfectGuesses++
 					break
-				} else {
+				} else if matchedIndices[j] == -1 {
 					m.LetterStates[word[i]] = common.LetterStateContainedMatch
 					m.setGridItem(m.CurrentRow, i, word[i], common.LetterStateContainedMatch)
 					ok = true
-					matchedIndices[j] = true
+					matchedIndices[j] = i
 				}
 			}
 		}
@@ -157,7 +165,7 @@ func (m *AppModel) enter() tea.Cmd {
 		m.GameState = common.GameStateWon
 	}
 
-	if m.CurrentRow > common.WordleMaxGuesses {
+	if m.CurrentRow >= common.WordleMaxGuesses {
 		m.GameState = common.GameStateLost
 	}
 
