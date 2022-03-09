@@ -45,7 +45,7 @@ func main() {
 		Name:    "wordle-cli",
 		Usage:   "play wordle in your terminal",
 		Action:  startOfficial,
-		Version: "1.0.5",
+		Version: "1.0.6",
 		Commands: []*cli.Command{
 			{
 				Name:   "official",
