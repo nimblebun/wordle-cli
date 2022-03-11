@@ -69,3 +69,4 @@ to play a new random word.
 [MIT](https://github.com/nimblebun/wordle-cli/blob/master/LICENSE).
 
 [gh-releases]: https://github.com/nimblebun/wordle-cli/releases/latest
+[aur-link]: https://aur.archlinux.org/packages/wordle-cli-bin
