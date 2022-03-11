@@ -17,7 +17,7 @@ Placing the binary somewhere in your `PATH` will make it available system-wide.
 
 ### For Debian users
 
-If you have a Debian or Debian-based system, you can use our Debian package
+If you have Debian or a Debian-based system, you can use our Debian package
 repository to install and update Wordle CLI globally.
 
 Run the following commands in succession:
@@ -27,6 +27,17 @@ echo "deb https://deb.nimblebun.works/debian stable main" | sudo tee /etc/apt/so
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 033D0D4895F432D1
 sudo apt update
 sudo apt install wordle-cli
+```
+
+### For Arch Linux users
+
+If you have Arch Linux or an Arch-based system (e.g. Manjaro), you can install
+Wordle CLI globally through [AUR][aur-link].
+
+Example using `yay`:
+
+```sh
+yay -S wordle-cli-bin
 ```
 
 ## Usage
