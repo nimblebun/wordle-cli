@@ -132,6 +132,10 @@ func (m *AppModel) renderFinalMessageBlock() string {
 		message += "Press Ctrl+N to start a new game.\n"
 	}
 
+	if m.GameState == common.GameStateLost {
+		message = string(m.Word[:]) + "\n\n" + message
+	}
+
 	message += "Press Ctrl+S to copy the share string.\nPress Ctrl+C to exit."
 
 	return lipgloss.NewStyle().
