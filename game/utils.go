@@ -165,7 +165,7 @@ func (m *AppModel) enter() tea.Cmd {
 		m.GameState = common.GameStateWon
 	}
 
-	if m.CurrentRow >= common.WordleMaxGuesses {
+	if m.CurrentRow >= common.WordleMaxGuesses && m.GameState != common.GameStateWon {
 		m.GameState = common.GameStateLost
 	}
 
