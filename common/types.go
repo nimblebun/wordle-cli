@@ -62,7 +62,7 @@ const (
 	GameStateLost
 )
 
-func (gs GameState) GetMessage(attempts int) string {
+func (gs GameState) GetMessage(attempts int, word string) string {
 	switch gs {
 	case GameStateWon:
 		switch attempts {
@@ -82,7 +82,7 @@ func (gs GameState) GetMessage(attempts int) string {
 			return "You won! 🎉"
 		}
 	case GameStateLost:
-		return "You lost! 😔"
+		return "You lost! 😔 The word was: " + word + "."
 	default:
 		return ""
 	}

@@ -120,7 +120,7 @@ func (m *AppModel) renderStatisticsBlock() string {
 func (m *AppModel) renderFinalMessageBlock() string {
 	message := fmt.Sprintf(
 		"%s\n\n%s\n\n",
-		m.GameState.GetMessage(m.CurrentRow),
+		m.GameState.GetMessage(m.CurrentRow, string(m.Word[:])),
 		m.getShareString(),
 	)
 
